@@ -76,7 +76,7 @@ rm -rf "${SD_DEBIANDIR}"
 mkdir "${SD_DEBIANDIR}"
 # package contents
 cd "${pkgdir}"
-tar -cjf "${SD_ROOTDIR}/data.tar.bz2" *
+tar -cjf "${SD_ROOTDIR}/data.tar.bz2" .
 # debian package meta data
 find . -type f | xargs md5sum >"${SD_DEBIANDIR}/md5sums"
 cd "${SD_DEBIANDIR}"
