@@ -1,0 +1,84 @@
+#!/bin/bash
+# A package script modelled after Arch's PKGBUILD
+set -e
+
+SD_ROOTDIR=$(pwd)
+SD_DEBIANDIR=${SD_ROOTDIR}/debian
+SD_DEBBUILD=$1
+
+# preinitialize some values
+#pkgname=foo
+#pkgver=0.99 # note: if the pkgver had been '0.99-10' then use an underscore. like '0.99_10'
+#pkgrel=1
+pkgdesc="no package description specified"
+arch=(i686 x86_64)
+url="http://libfirm.org"
+license=('Unknown')
+groups=
+provides=
+depends=
+makedepends=('build-essential')
+conflicts=
+replaces=
+install=
+build() {
+	cd $srcdir/$pkgname-$pkgver
+	./configure --prefix=/usr
+	make
+	make DESTDIR={$pkgdir} install
+}
+package() {
+	true # empty by default
+}
+
+srcdir=$(pwd)/src/
+pkgdir=$(pwd)/pkg/
+
+# now read/execute the DEBUILD file
+source ${SD_DEBBUILD}
+
+rm -rf ${srcdir}
+mkdir -p ${srcdir}
+rm -rf ${pkgdir}
+mkdir -p ${pkgdir}
+
+# download stuff
+for file in ${source}
+do
+	wget -q -c ${file}
+	cp -n $(basename ${file}) ${srcdir}/
+	cd ${srcdir}
+	tar xf $(basename ${file})
+done
+
+# build and "install" everything
+echo "building ..."
+cd ${srcdir}
+build || echo "error in build"
+package || echo "error in package"
+
+# create a deb file
+echo "make deb ..."
+cd ${SD_ROOTDIR}
+echo "2.0" >debian-binary
+mkdir -p ${SD_DEBIANDIR}
+cd ${pkgdir}
+tar cjf ${SD_ROOTDIR}/data.tar.bz2 *
+md5sum $(find . -type f) >${SD_DEBIANDIR}/md5sums
+cd ${SD_DEBIANDIR}
+touch postinst prerm
+cat >control <<EOF
+Package: $pkgname
+Version: $pkgver
+Architecture: ${arch}
+Maintainer: DEBBUILD
+Depends: ${depends}
+Description: ${pkgdesc}
+EOF
+tar czf ${SD_ROOTDIR}/control.tar.gz *
+cd ${SD_ROOTDIR}
+ar r ${pkgname}-${pkgver}-${pkgrel}.deb debian-binary control.tar.gz data.tar.bz2
+
+# cleanup
+#rm -rf debian
+#rm debian-binary control.tar.gz data.tar.bz2
