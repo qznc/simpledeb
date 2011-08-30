@@ -9,7 +9,7 @@ SD_DEBBUILD=$1
 # preinitialize some values
 #pkgname=foo
 #pkgver=0.99 # note: if the pkgver had been '0.99-10' then use an underscore. like '0.99_10'
-#pkgrel=1
+pkgrel=0
 pkgdesc="no package description specified"
 arch=(i686 x86_64)
 url="http://libfirm.org"
@@ -48,22 +48,25 @@ do
 	wget -q -c ${file}
 	cp -n $(basename ${file}) ${srcdir}/
 	cd ${srcdir}
-	tar xf $(basename ${file})
+	tar -xf $(basename ${file})
 done
 
 # build and "install" everything
 echo "building ..."
 cd ${srcdir}
-build || echo "error in build"
-package || echo "error in package"
+build || $(echo "error in build"; exit 1)
+package || $(echo "error in package"; exit 1)
 
 # create a deb file
 echo "make deb ..."
 cd ${SD_ROOTDIR}
+# debian package version
 echo "2.0" >debian-binary
-mkdir -p ${SD_DEBIANDIR}
+mkdir ${SD_DEBIANDIR}
+# package contents
 cd ${pkgdir}
-tar cjf ${SD_ROOTDIR}/data.tar.bz2 *
+tar -cjf ${SD_ROOTDIR}/data.tar.bz2 *
+# debian package meta data
 md5sum $(find . -type f) >${SD_DEBIANDIR}/md5sums
 cd ${SD_DEBIANDIR}
 touch postinst prerm
@@ -71,14 +74,20 @@ cat >control <<EOF
 Package: $pkgname
 Version: $pkgver
 Architecture: ${arch}
-Maintainer: DEBBUILD
+Maintainer: SIMPLE DEB <nobody@web.net>
 Depends: ${depends}
+Homepage: ${url}
+Installed-Size: $(du -s ${pkgdir})
+Date: $(date)
 Description: ${pkgdesc}
+ .
+ (This package was created with simpledeb)
 EOF
-tar czf ${SD_ROOTDIR}/control.tar.gz *
+chmod -f 0755 config postinst postrm preinst prerm || true # ignore error return code on missing files
+tar -czf ${SD_ROOTDIR}/control.tar.gz *
 cd ${SD_ROOTDIR}
 ar r ${pkgname}-${pkgver}-${pkgrel}.deb debian-binary control.tar.gz data.tar.bz2
 
 # cleanup
-#rm -rf debian
-#rm debian-binary control.tar.gz data.tar.bz2
+rm -rf ${SD_DEBIANDIR} ${srcdir} ${pkgdir}
+rm debian-binary control.tar.gz data.tar.bz2
