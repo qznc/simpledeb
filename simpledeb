@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # A package script modelled after Arch's PKGBUILD
 set -e
 
@@ -37,12 +37,16 @@ pkgdir="${PWD}/pkg/"
 # now read/execute the DEBUILD file
 source "${SD_DEBBUILD}"
 
-rm -rf "${srcdir}"
-mkdir -p "${srcdir}"
-rm -rf "${pkgdir}"
-mkdir -p "${pkgdir}"
+clear_dir() {
+	rm -fr "$1"
+	mkdir -p "$1"
+}
+
+clear_dir "$srcdir"
+clear_dir "$pkgdir"
 
 # download stuff
+cd "$SD_ROOTDIR"
 for ((i=0; i < ${#source[@]} ; i++))
 do
 	url="${source[$i]}"
@@ -69,25 +73,24 @@ echo "make deb ..."
 cd "${SD_ROOTDIR}"
 # debian package version
 echo "2.0" >debian-binary
-rm -rf "${SD_DEBIANDIR}"
-mkdir "${SD_DEBIANDIR}"
+clear_dir "$SD_DEBIANDIR"
 # package contents
 cd "${pkgdir}"
 tar -cjf "${SD_ROOTDIR}/data.tar.bz2" .
 # debian package meta data
-find . -type f | xargs md5sum >"${SD_DEBIANDIR}/md5sums"
+find . -type f -print0 | xargs -0 md5sum > "$SD_DEBIANDIR/md5sums"
 cd "${SD_DEBIANDIR}"
 touch postinst prerm
-cat >control <<EOF
+cat > control << EOF
 Package: $pkgname
 Version: $pkgver
-Architecture: ${arch}
+Architecture: $arch
 Maintainer: SIMPLE DEB <nobody@web.net>
-Depends: ${depends}
-Homepage: ${url}
-Installed-Size: $(du -s ${pkgdir})
+Depends: $depends
+Homepage: $url
+Installed-Size: $(du -s "$pkgdir")
 Date: $(date)
-Description: ${pkgdesc}
+Description: $pkgdesc
  .
  (This package was created with simpledeb)
 EOF
