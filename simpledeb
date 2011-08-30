@@ -78,7 +78,7 @@ mkdir "${SD_DEBIANDIR}"
 cd "${pkgdir}"
 tar -cjf "${SD_ROOTDIR}/data.tar.bz2" *
 # debian package meta data
-md5sum $(find . -type f) >"${SD_DEBIANDIR}/md5sums"
+find . -type f | xargs md5sum >"${SD_DEBIANDIR}/md5sums"
 cd "${SD_DEBIANDIR}"
 touch postinst prerm
 cat >control <<EOF
