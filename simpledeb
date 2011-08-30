@@ -43,13 +43,22 @@ rm -rf ${pkgdir}
 mkdir -p ${pkgdir}
 
 # download stuff
-for file in ${source}
+for ((i=0; i < ${#source[@]} ; i++))
 do
+	url=${source[$i]}
+	md5=${md5sums[$i]}
 	cd ${SD_ROOTDIR}
-	wget -q -c ${file}
-	cp -n $(basename ${file}) ${srcdir}/
+	wget -q -c ${url}
+	file=$(basename ${url})
+	md5_actual=$(md5sum ${file} | cut -d ' ' -f 1 -s)
+	if [ ${md5} != ${md5_actual} ]
+	then
+		echo "MD5 mismatch for ${file}"
+		exit 1
+	fi
+	cp -n ${file} ${srcdir}/
 	cd ${srcdir}
-	tar -xf $(basename ${file})
+	tar -xf ${file}
 done
 
 # build and "install" everything

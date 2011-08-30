@@ -8,7 +8,7 @@ license=('GPL')
 depends=()
 
 source=("http://downloads.sourceforge.net/project/libfirm/libfirm/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('1d303b067c09ab6ca305fb527036aeab')
+md5sums=('2adb560c0249b0e03a5a3782f7523b21')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
