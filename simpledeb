@@ -45,6 +45,7 @@ mkdir -p ${pkgdir}
 # download stuff
 for file in ${source}
 do
+	cd ${SD_ROOTDIR}
 	wget -q -c ${file}
 	cp -n $(basename ${file}) ${srcdir}/
 	cd ${srcdir}
@@ -62,6 +63,7 @@ echo "make deb ..."
 cd ${SD_ROOTDIR}
 # debian package version
 echo "2.0" >debian-binary
+rm -rf ${SD_DEBIANDIR}
 mkdir ${SD_DEBIANDIR}
 # package contents
 cd ${pkgdir}
