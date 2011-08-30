@@ -56,9 +56,8 @@ do
 		echo "MD5 mismatch for ${file}"
 		exit 1
 	fi
-	cp -n "${file}" "${srcdir}/"
 	cd "${srcdir}"
-	tar -xf "${file}"
+	tar -xf "${SD_ROOTDIR}/${file}"
 done
 
 # build and "install" everything
