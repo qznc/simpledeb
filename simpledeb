@@ -47,7 +47,6 @@ for ((i=0; i < ${#source[@]} ; i++))
 do
 	url="${source[$i]}"
 	md5="${md5sums[$i]}"
-	cd "${SD_ROOTDIR}"
 	wget -q -c "${url}"
 	file="${url##*/}"
 	md5_actual=$(md5sum "${file}" | cut -c 1-32)
@@ -56,8 +55,7 @@ do
 		echo "MD5 mismatch for ${file}"
 		exit 1
 	fi
-	cd "${srcdir}"
-	tar -xf "${SD_ROOTDIR}/${file}"
+	tar -xf "${SD_ROOTDIR}/${file}" -C "${srcdir}"
 done
 
 # build and "install" everything
