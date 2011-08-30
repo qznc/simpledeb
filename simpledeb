@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # A package script modelled after Arch's PKGBUILD
 set -e
 
-SD_ROOTDIR=$(pwd)
-SD_DEBIANDIR=${SD_ROOTDIR}/debian
-SD_DEBBUILD=$1
+SD_ROOTDIR="$PWD"
+SD_DEBIANDIR="$SD_ROOTDIR/debian"
+SD_DEBBUILD="$1"
 
 # preinitialize some values
 #pkgname=foo
@@ -22,83 +22,81 @@ conflicts=
 replaces=
 install=
 build() {
-	cd $srcdir/$pkgname-$pkgver
+	cd "$srcdir/$pkgname-$pkgver"
 	./configure --prefix=/usr
 	make
-	make DESTDIR={$pkgdir} install
+	make DESTDIR="$pkgdir" install
 }
 package() {
 	true # empty by default
 }
 
-srcdir=$(pwd)/src/
-pkgdir=$(pwd)/pkg/
+srcdir="$PWD/src/"
+pkgdir="$PWD/pkg/"
 
 # now read/execute the DEBUILD file
 source ${SD_DEBBUILD}
 
-rm -rf ${srcdir}
-mkdir -p ${srcdir}
-rm -rf ${pkgdir}
-mkdir -p ${pkgdir}
+clear_dir() {
+	rm -fr "$1"
+	mkdir -p "$1"
+}
+
+clear_dir "$srcdir"
+clear_dir "$pkgdir"
 
 # download stuff
-for ((i=0; i < ${#source[@]} ; i++))
-do
+cd "$SD_ROOTDIR"
+for ((i=0; i < ${#source[@]} ; i++)); do
 	url=${source[$i]}
 	md5=${md5sums[$i]}
-	cd ${SD_ROOTDIR}
-	wget -q -c ${url}
-	file=$(basename ${url})
-	md5_actual=$(md5sum ${file} | cut -d ' ' -f 1 -s)
-	if [ ${md5} != ${md5_actual} ]
-	then
-		echo "MD5 mismatch for ${file}"
+	wget -q -c "$url"
+	file="${url##*/}"
+	md5_actual=$(md5sum "$file" | cut -c 1-32)
+	if [ "$md5" != "$md5_actual" ]; then
+		echo "MD5 mismatch for $file"
 		exit 1
 	fi
-	cp -n ${file} ${srcdir}/
-	cd ${srcdir}
-	tar -xf ${file}
+	tar xf "$SD_ROOTDIR/$file" -C "$srcdir"
 done
 
 # build and "install" everything
 echo "building ..."
-cd ${srcdir}
+cd "$srcdir"
 build || $(echo "error in build"; exit 1)
 package || $(echo "error in package"; exit 1)
 
 # create a deb file
 echo "make deb ..."
-cd ${SD_ROOTDIR}
+cd "$SD_ROOTDIR"
 # debian package version
-echo "2.0" >debian-binary
-rm -rf ${SD_DEBIANDIR}
-mkdir ${SD_DEBIANDIR}
+echo "2.0" > debian-binary
+clear_dir "$SD_DEBIANDIR"
 # package contents
-cd ${pkgdir}
-tar -cjf ${SD_ROOTDIR}/data.tar.bz2 *
+cd "$pkgdir"
+tar cjf "$SD_ROOTDIR/data.tar.bz2" .
 # debian package meta data
-md5sum $(find . -type f) >${SD_DEBIANDIR}/md5sums
-cd ${SD_DEBIANDIR}
+find . -type f -print0 | xargs -0 md5sum > "$SD_DEBIANDIR/md5sums"
+cd "$SD_DEBIANDIR"
 touch postinst prerm
-cat >control <<EOF
+cat > control << EOF
 Package: $pkgname
 Version: $pkgver
-Architecture: ${arch}
+Architecture: $arch
 Maintainer: SIMPLE DEB <nobody@web.net>
-Depends: ${depends}
-Homepage: ${url}
-Installed-Size: $(du -s ${pkgdir})
+Depends: $depends
+Homepage: $url
+Installed-Size: $(du -s "$pkgdir")
 Date: $(date)
-Description: ${pkgdesc}
+Description: $pkgdesc
  .
  (This package was created with simpledeb)
 EOF
 chmod -f 0755 config postinst postrm preinst prerm || true # ignore error return code on missing files
-tar -czf ${SD_ROOTDIR}/control.tar.gz *
-cd ${SD_ROOTDIR}
-ar r ${pkgname}-${pkgver}-${pkgrel}.deb debian-binary control.tar.gz data.tar.bz2
+tar czf "$SD_ROOTDIR/control.tar.gz" .
+cd "$SD_ROOTDIR"
+ar r "$pkgname-$pkgver-$pkgrel.deb" debian-binary control.tar.gz data.tar.bz2
 
 # cleanup
-rm -rf ${SD_DEBIANDIR} ${srcdir} ${pkgdir}
+rm -rf "$SD_DEBIANDIR" "$srcdir" "$pkgdir"
 rm debian-binary control.tar.gz data.tar.bz2
