@@ -31,11 +31,11 @@ package() {
 	true # empty by default
 }
 
-srcdir="${PWD}/src/"
-pkgdir="${PWD}/pkg/"
-
 # now read/execute the DEBUILD file
 source "${SD_DEBBUILD}"
+
+srcdir="${PWD}/src/"
+pkgdir="${PWD}/pkg/"
 
 clear_dir() {
 	rm -fr "$1"
