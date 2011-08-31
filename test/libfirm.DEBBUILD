@@ -2,10 +2,9 @@ pkgname=libfirm
 pkgver=1.19.1
 pkgrel=0
 pkgdesc="intermediate representation and optimisations for compilers"
-arch=("i386")
+arch=i386
 url="http://libfirm.org"
-license=('GPL')
-depends=()
+license=GPL
 
 source="2adb560c0249b0e03a5a3782f7523b21 http://downloads.sourceforge.net/project/libfirm/libfirm/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
 
