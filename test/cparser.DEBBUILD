@@ -7,11 +7,10 @@ arch=("i386")
 url="http://libfirm.org"
 license=('GPL')
 
-source=(
-	"http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
-	"http://downloads.sourceforge.net/project/libfirm/libfirm/${libfirmver}/libfirm-${libfirmver}.tar.bz2"
-)
-md5sums=('6c936f67d34481ae53e0b68c0f148e0e' '2adb560c0249b0e03a5a3782f7523b21')
+source="\
+ 6c936f67d34481ae53e0b68c0f148e0e http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2
+ 2adb560c0249b0e03a5a3782f7523b21 http://downloads.sourceforge.net/project/libfirm/libfirm/${libfirmver}/libfirm-${libfirmver}.tar.bz2
+"
 
 build() {
 	# build libfirm

@@ -52,10 +52,8 @@ clear_dir "$pkgdir"
 
 # download stuff
 cd "$SD_ROOTDIR"
-for ((i=0; i < ${#source[@]} ; i++))
+echo "${source}" | while read md5 url
 do
-	url="${source[$i]}"
-	md5="${md5sums[$i]}"
 	wget -q -c "${url}"
 	file="${url##*/}"
 	md5_actual=$(md5sum "${file}" | cut -c 1-32)

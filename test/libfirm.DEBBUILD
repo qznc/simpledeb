@@ -7,8 +7,7 @@ url="http://libfirm.org"
 license=('GPL')
 depends=()
 
-source=("http://downloads.sourceforge.net/project/libfirm/libfirm/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('2adb560c0249b0e03a5a3782f7523b21')
+source="2adb560c0249b0e03a5a3782f7523b21 http://downloads.sourceforge.net/project/libfirm/libfirm/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
