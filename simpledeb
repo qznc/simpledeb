@@ -2,6 +2,11 @@
 # A package script modelled after Arch's PKGBUILD
 set -e
 
+if [ $# != 1 ]; then
+	echo "usage: $0 <debbuild>"
+	exit 1
+fi
+
 SD_ROOTDIR="${PWD}"
 SD_DEBIANDIR="${SD_ROOTDIR}/debian"
 SD_DEBBUILD="$1"
