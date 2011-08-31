@@ -7,8 +7,8 @@ SD_DEBIANDIR="${SD_ROOTDIR}/debian"
 SD_DEBBUILD="$1"
 
 # preinitialize some values
-#pkgname=foo
-#pkgver=0.99 # note: if the pkgver had been '0.99-10' then use an underscore. like '0.99_10'
+pkgname="FIXME"
+pkgver="FIXME"
 pkgrel=0
 pkgdesc="no package description specified"
 arch="i386"
