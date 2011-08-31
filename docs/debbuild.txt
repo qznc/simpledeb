@@ -1,0 +1,42 @@
+DEBBUILD Documentation
+
+This is inspired by the Arch Build System [0], but is adapted to deb packages.
+
+A .DEBBUILD file MUST contain the following fields:
+
+* pkgname: the name of the package
+* pkgver: the version of the package as given by the packaged software, so gcc 4.5.1 should have pkgver=4.5.1.
+* pkgrel: the version of the DEBBUILD relative to pkgver. Essentially, another level of the version number.
+* pkgdesc: the text description for this package
+* source: a list of md5sums and urls to fetch source tarballs
+
+A .DEBBUILD file SHOULD contain the following fields:
+
+* arch: usually i386
+* url: corresponding homepage to the packaged software
+* licence: something like GPL, BSD, etc.
+
+A .DEBBUILD file CAN contain the following fields:
+
+* depends: for package dependencies (libraries, data, etc)
+* makedepends: dependencies for building the package (make, gcc, etc)
+* conflicts: other packages, which conflict with this package
+
+Finally, a .DEBBUILD file will probably declare a build() function,
+which by default looks like this:
+
+	build() {
+		cd "$srcdir/$pkgname-$pkgver"
+		./configure --prefix=/usr
+		make
+		make DESTDIR="${pkgdir}" install
+	}
+
+It assumes the source tarballs unpacked into $srcdir and installs the program to $pkgdir.
+The DEBBUILD file is just a shell script.
+
+The simpledeb wrapper will the package the contents of $pkgdir,
+together with the meta data specified in the fields above,
+into a deb package file.
+
+ [0] https://wiki.archlinux.de/title/Arch_Build_System

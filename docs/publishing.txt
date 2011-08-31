@@ -1,0 +1,20 @@
+How to publish a package repository with simpledeb?
+
+1. You have a directory full of *.DEBBUILD files (like the test directory)
+2. Applying simpledeb on each of them, so you get various *.deb files
+3. Copy the .deb files into some web readable directory,
+   where apt can download them.
+4. Create an index with dpkg-scanpackages.
+   This is actually a little bit confusing, because i do not understand this in detail. Maybe some Debian wizard can correct or simplify this?
+4.1. Create a dists/$DISTRO_RELEASE/$SUB_REPO/binary-i386 directory,
+   where $DISTRO_RELEASE would currently be "natty"
+   and $SUB_REPO might be "main" or whatever.
+4.2. Run `dpkg-scanpackages . | gzip >$DIR/Packages.gz`,
+   where $DIR is the binary-i386 path from above.
+5. Check your package with the lintian tool.
+6. Try it by adding
+   deb http://$SOME_DOMAIN/$SOME_PATH $DISTRO_RELEASE $SUB_REPO
+   to your /etc/apt/sources.list.
+
+
+Source packages are not supported.

@@ -19,21 +19,14 @@ pkgdesc="no package description specified"
 arch="i386"
 url="http://libfirm.org"
 license="Unknown"
-groups=
-provides=
 depends=
 makedepends=('build-essential')
 conflicts=
-replaces=
-install=
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
 	./configure --prefix=/usr
 	make
 	make DESTDIR="${pkgdir}" install
-}
-package() {
-	true # empty by default
 }
 
 # now read/execute the DEBUILD file
@@ -69,7 +62,6 @@ done
 echo "building ..."
 cd "${srcdir}"
 build || $(echo "error in build"; exit 1)
-package || $(echo "error in package"; exit 1)
 
 # create a deb file
 echo "make deb ..."
