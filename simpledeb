@@ -83,7 +83,11 @@ tar -cjf "${SD_ROOTDIR}/data.tar.bz2" .
 # debian package meta data
 find . -type f -print0 | xargs -0 md5sum > "$SD_DEBIANDIR/md5sums"
 cd "${SD_DEBIANDIR}"
-touch postinst prerm
+echo "#!/bin/sh
+" > postinst
+echo "#!/bin/sh
+" > prerm
+chmod -f 0755 config postinst postrm preinst prerm || true # ignore error return code on missing files
 cat > control << EOF
 Package: $pkgname
 Version: $pkgver
@@ -97,7 +101,6 @@ Description: $pkgdesc
  .
  (This package was created with simpledeb)
 EOF
-chmod -f 0755 config postinst postrm preinst prerm || true # ignore error return code on missing files
 tar -czf "${SD_ROOTDIR}/control.tar.gz" *
 cd "${SD_ROOTDIR}"
 ar r "${pkgname}-${pkgver}-${pkgrel}.deb" debian-binary control.tar.gz data.tar.bz2
