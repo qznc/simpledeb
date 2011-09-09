@@ -1,0 +1,34 @@
+pkgname=zod
+pkgver=2011-09-06
+pkgrel=0
+pkgdesc="A Remake of the Z real-time strategy game
+ The Zod Engine is an open source remake of the 1996 game Z by the Bitmap Brothers written in C++ using the SDL library for Linux / Windows / Etc."
+arch=i386
+url="http://zod.sourceforge.net/"
+license=GPL
+
+source="\
+ ab366b279e43add48d66e3d8224cfafa http://downloads.sourceforge.net/project/zod/linux_releases/zod_linux-${pkgver}.tar.gz"
+
+build() {
+   mkdir -p ${pkgdir}/opt
+   mkdir -p ${pkgdir}/usr/share/icons
+   mkdir -p ${pkgdir}/usr/share/applications
+
+   cp -lr ${srcdir}/zod_engine/assets/icon.png ${pkgdir}/usr/share/icons/zod.png
+   cp -lr ${srcdir}/zod_engine ${pkgdir}/opt/zod-${pkgver}
+
+   cat >${pkgdir}/usr/share/applications/zod-engine.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Zod
+Icon=zod
+Exec=/opt/zod-${pkgver}/zod_launcher
+Terminal=false
+Categories=Game;
+Comment=A remake of Z (fast real time strategy)
+EOF
+
+   chown -R root:root ${pkgdir}
+}
