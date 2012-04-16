@@ -1,0 +1,16 @@
+pkgname=vixn
+pkgver=0.7.14
+pkgrel=1
+pkgdesc="graphical vi-clone"
+arch=i386
+url="http://www.vixn.org"
+license=GPL
+
+source="\
+ 3f82de1ce31e5e39896fd991ec21b122 http://download.tuxfamily.org/$pkgname/$pkgname-$pkgver.tar.bz2"
+
+build() {
+   cd $srcdir/$pkgname-$pkgver
+   ./install.sh $pkgdir
+   chown -R root:root ${pkgdir}
+}
