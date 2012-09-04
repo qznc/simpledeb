@@ -1,0 +1,15 @@
+pkgname=firefox
+pkgver=15.0
+pkgrel=0
+pkgdesc="Big browser by mozilla"
+arch=i386
+url="http://www.mozilla.org/"
+license=GPL
+
+source="1eef3b698ff06150b97ea7835e710769 http://mozilla.cdn.leaseweb.com/$pkgname/releases/$pkgver/linux-i686/en-US/$pkgname-$pkgver.tar.bz2"
+
+build() {
+	mkdir -p "$pkgdir/usr/bin" "$pkgdir/opt"
+	mv "$srcdir/$pkgname" "$pkgdir/opt/$pkgname"
+	ln -s /opt/$pkgname/$pkgname "$pkgdir/usr/bin/$pkgname"
+}
