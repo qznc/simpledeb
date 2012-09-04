@@ -1,0 +1,15 @@
+pkgname=thunderbird
+pkgver=15.0
+pkgrel=0
+pkgdesc="Big email client by mozilla"
+arch=i386
+url="http://www.mozilla.org/"
+license=GPL
+
+source="c38abb32f488a87a487108fa6bf05809 http://mozilla.cdn.leaseweb.com/thunderbird/releases/$pkgver/linux-i686/en-US/thunderbird-$pkgver.tar.bz2"
+
+build() {
+	mkdir -p "$pkgdir/usr/bin" "$pkgdir/opt"
+	mv "$srcdir/thunderbird" "$pkgdir/opt/thunderbird"
+	ln -s /opt/thunderbird/thunderbird "$pkgdir/usr/bin/thunderbird"
+}
