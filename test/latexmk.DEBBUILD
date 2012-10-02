@@ -1,0 +1,20 @@
+pkgname=latexmk
+pkgver=4.33c
+pkgrel=0
+pkgdesc="Yet another LaTeX build script"
+arch=i386
+url="http://ctan.tug.org/tex-archive/support/latexmk/"
+license=GPL
+depends="perl texlive-latex-base"
+
+source="e1c5d1a3268f0139b8e2d1b42f5dddbc http://mirror.ctan.org/support/latexmk.zip"
+
+build() {
+	cd ${srcdir}
+	unzip ../latexmk.zip
+	 
+	mkdir -p ${pkgdir}/usr/bin
+	cp ${srcdir}/${pkgname}/latexmk.pl ${pkgdir}/usr/bin/latexmk
+	mkdir -p ${pkgdir}/usr/share/man/man1
+	cp ${srcdir}/${pkgname}/latexmk.1 ${pkgdir}/usr/share/man/man1/
+}
