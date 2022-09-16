@@ -1,0 +1,19 @@
+pkgname=cmake
+pkgver=3.24.2
+pkgrel=1
+pkgdesc="build configuration tool"
+arch=amd64
+url="https://cmake.org/"
+license=BSD3
+
+# because of how Debian packages CMake:
+conflicts=cmake-data
+
+source="\
+ f6f79ec66c91bbc075757a70205128ca https://github.com/Kitware/CMake/releases/download/v${pkgver}/${pkgname}-${pkgver}-linux-x86_64.tar.gz"
+
+build() {
+   cd $srcdir/${pkgname}-${pkgver}-linux-x86_64
+   rsync -az ./ ${pkgdir}/usr
+   chown -R root:root ${pkgdir}
+}

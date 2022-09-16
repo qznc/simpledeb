@@ -59,12 +59,12 @@ do
 done
 
 # build and "install" everything
-echo "building ..."
+>&2 echo "building ..."
 cd "${srcdir}"
 build || $(echo "error in build"; exit 1)
 
 # create a deb file
-echo "make deb ..."
+>&2 echo "make deb ..."
 cd "${SD_ROOTDIR}"
 # debian package version
 echo "2.0" >debian-binary
@@ -88,6 +88,7 @@ Maintainer: SIMPLE DEB <nobody@web.net>
 Depends: $depends
 Homepage: $url
 Installed-Size: $(du -s "$pkgdir" | cut -f 1)
+Conflicts: ${conflicts}
 Date: $(date)
 Description: $pkgdesc
  .
