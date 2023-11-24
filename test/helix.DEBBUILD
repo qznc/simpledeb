@@ -1,0 +1,15 @@
+pkgname=helix
+pkgver=23.10
+pkgrel=0
+pkgdesc="Post-modern text editor written in Rust"
+arch=amd64
+url=https://helix-editor.com/
+license=MPL-2.0
+
+source="5b6d9aba5dbed1b91aa5f37502313e28 https://github.com/helix-editor/helix/releases/download/$pkgver/helix-$pkgver-x86_64-linux.tar.xz"
+
+build() {
+	mkdir -p "$pkgdir/usr/bin" "$pkgdir/opt"
+	mv "$srcdir/$pkgname-$pkgver-x86_64-linux/" "$pkgdir/opt/$pkgname"
+	ln -s /opt/$pkgname/hx "$pkgdir/usr/bin/hx"
+}

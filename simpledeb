@@ -44,10 +44,11 @@ clear_dir "$srcdir"
 clear_dir "$pkgdir"
 
 # download stuff
+>&2 echo "downloading ..."
 cd "$SD_ROOTDIR"
 echo "${source}" | while read md5 url
 do
-	wget -q -c "${url}"
+	curl "${url}" -O -C - -L
 	file="${url##*/}"
 	md5_actual=$(md5sum "${file}" | cut -c 1-32)
 	if [ "${md5}" != "${md5_actual}" ]
