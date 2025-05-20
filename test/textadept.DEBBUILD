@@ -1,0 +1,19 @@
+pkgname=textadept
+pkgver=12.6
+pkgrel=0
+pkgdesc="Fast, minimalist, and remarkably extensible cross-platform text editor for programmers."
+arch=amd64
+url=https://orbitalquark.github.io/textadept/
+license=MIT
+
+source="91aa935d5a9999be8d918ef8b6f06e7f https://github.com/orbitalquark/textadept/releases/download/textadept_$pkgver/textadept_$pkgver.linux.tgz"
+
+build() {
+	mkdir -p "$pkgdir/opt" "$pkgdir/usr/bin" "$pkgdir/usr/share/applications" "$pkgdir/usr/share/icons"
+	rsync -r "$srcdir/$pkgname" "$pkgdir/opt/"
+	ln -s /opt/textadept/textadept-curses "$pkgdir/usr/bin/"
+	ln -s /opt/textadept/textadept-gtk "$pkgdir/usr/bin/"
+	ln -s /opt/textadept/textadept "$pkgdir/usr/bin/"
+	ln -s /opt/textadept/textadept-gtk.desktop "$pkgdir/usr/share/applications/"
+	ln -s /opt/textadept/core/images/textadept.png "$pkgdir/usr/share/icons/"
+}
