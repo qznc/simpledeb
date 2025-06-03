@@ -1,0 +1,17 @@
+pkgname=zed.app
+pkgver=0.188.5
+pkgrel=0
+pkgdesc="Code editor designed for high-performance collaboration with humans and AI."
+arch=amd64
+url=https://zed.dev
+license=MIT
+
+source="b408ddeaf924f7578efa91f10cf7c17c https://zed.dev/api/releases/stable/latest/zed-linux-x86_64.tar.gz"
+
+build() {
+	mkdir -p "$pkgdir/opt" "$pkgdir/usr/bin" "$pkgdir/usr/share/applications" "$pkgdir/usr/share/icons"
+	rsync -r "$srcdir/$pkgname" "$pkgdir/opt/"
+	ln -s /opt/$pkgname/bin/zed "$pkgdir/usr/bin/"
+	ln -s /opt/$pkgname/share/applications/zed.desktop "$pkgdir/usr/share/applications/"
+	ln -s /opt/$pkgname/share/icons/hicolor/512x512/apps/zed.png "$pkgdir/usr/share/icons/"
+}

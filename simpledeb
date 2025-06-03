@@ -48,8 +48,8 @@ clear_dir "$pkgdir"
 cd "$SD_ROOTDIR"
 echo "${source}" | while read md5 url
 do
-	curl "${url}" -O -C - -L
 	file="${url##*/}"
+	[ -f "$file" ] || curl "${url}" -O -C - -L
 	md5_actual=$(md5sum "${file}" | cut -c 1-32)
 	if [ "${md5}" != "${md5_actual}" ]
 	then
