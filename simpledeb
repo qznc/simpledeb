@@ -54,6 +54,8 @@ do
 	if [ "${md5}" != "${md5_actual}" ]
 	then
 		echo "MD5 mismatch for ${file}"
+		echo "${md5} specified"
+		echo "${md5_actual} actual"
 		exit 1
 	fi
 	tar -xf "${SD_ROOTDIR}/${file}" -C "${srcdir}" || true
