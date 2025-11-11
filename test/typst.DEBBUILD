@@ -1,0 +1,15 @@
+pkgname=typst-cli
+pkgver=0.14.0
+pkgrel=0
+pkgdesc="markup-based typesetting system"
+arch=amd64
+url=https://github.com/typst/typst
+license=Apache2
+
+source="8d61b0ccb13d5853708bda90b43902fb https://github.com/typst/typst/releases/download/v${pkgver}/typst-x86_64-unknown-linux-musl.tar.xz"
+
+build() {
+    mkdir -p ${pkgdir}/usr/bin
+    install ${srcdir}/typst-x86_64-unknown-linux-musl/typst ${pkgdir}/usr/bin/
+    #chown -R root:root ${pkgdir}
+}
