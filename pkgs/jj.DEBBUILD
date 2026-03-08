@@ -1,0 +1,14 @@
+pkgname=jj
+pkgver=0.39.0
+pkgrel=0
+pkgdesc="A Git-compatible VCS that is both simple and powerful."
+arch=amd64
+url=https://github.com/jj-vcs/jj
+license=Apache2
+
+source="4928386148c9acf3cdf7be2b04d5fdf5 https://github.com/jj-vcs/jj/releases/download/v${pkgver}/jj-v${pkgver}-x86_64-unknown-linux-musl.tar.gz"
+
+build() {
+    mkdir -p ${pkgdir}/usr/bin
+    install ${srcdir}/jj ${pkgdir}/usr/bin/
+}
